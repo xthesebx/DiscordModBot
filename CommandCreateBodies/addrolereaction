@@ -1,0 +1,31 @@
+{"name" : "addrolereaction",
+"type" : 1,
+"description" : "adds a role reaction to a message",
+"default_member_permissions" : "0",
+"options" : [
+  {
+    "type" : 3,
+    "name" : "channelid",
+    "description" : "channel to put the reaction message in",
+    "required" : true
+  },
+  {
+    "type" : 3,
+    "name" : "name",
+    "description" : "name to edit the reaction",
+    "required" : true
+  },
+  {
+    "type" : 8,
+    "name" : "role",
+    "description" : "role to give",
+    "required" : true
+  },
+  {
+    "type" : 3,
+    "name" : "emote",
+    "description" : "emote to show",
+    "required" : true
+  }
+]
+}
