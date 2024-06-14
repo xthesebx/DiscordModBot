@@ -73,7 +73,6 @@ public class Colour extends BasicCommand {
              * Repeat command in few seconds.
              * Just waiting in thread doesn't work cause it keeps the caches and they are not deletable.
              */
-            Logger.error(e);
             role.delete().complete();
             event.getHook().editOriginal("just try again in a few secs, discord is an asshole i think").queue();
         }
