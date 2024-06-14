@@ -3,6 +3,7 @@ package com.seb;
 import com.seb.eventhandling.GiveRole;
 import com.seb.eventhandling.TakeRole;
 import com.seb.eventhandling.commands.AddRoleReaction;
+import com.seb.eventhandling.commands.Colour;
 import com.seb.eventhandling.commands.CreateRoleReaction;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -24,6 +25,7 @@ public class Server {
         switch (event.getName()) {
             case "createrolereaction" -> new CreateRoleReaction(event, this);
             case "addrolereaction" -> new AddRoleReaction(event, this);
+            case "colour" -> new Colour(event, this);
         }
     }
 

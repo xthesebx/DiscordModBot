@@ -34,6 +34,15 @@
             <groupId>com.github.hawolt.hawolt-core</groupId>
             <artifactId>Logger</artifactId>
             <version>898c981f5b</version>
+        </dependency>        <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
         </dependency>
     </dependencies>
 

@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -31,7 +32,7 @@ public class Main extends ListenerAdapter {
         // read(new File("saves/" + "465880611907698688" + "/" + "1232779790503641218" + ".json"));
 
         File env = new File("apikey.env");
-        JDA jda = JDABuilder.createDefault(read(env).strip()).enableIntents(GatewayIntent.MESSAGE_CONTENT).enableIntents(GatewayIntent.GUILD_MESSAGES).enableIntents(GatewayIntent.GUILD_MESSAGE_TYPING).setStatus(OnlineStatus.OFFLINE).build();
+        JDA jda = JDABuilder.createDefault(read(env).strip()).enableIntents(GatewayIntent.MESSAGE_CONTENT).enableIntents(GatewayIntent.GUILD_MESSAGES).enableIntents(GatewayIntent.GUILD_MESSAGE_TYPING).setStatus(OnlineStatus.OFFLINE).setMemberCachePolicy(MemberCachePolicy.NONE).build();
         jda.addEventListener(this);
         jda.awaitReady();
         if (!new File("saves").exists()) new File("saves").mkdir();
