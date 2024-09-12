@@ -1,6 +1,5 @@
 package com.seb.eventhandling.commands;
 
-import com.hawolt.logger.Logger;
 import com.seb.Server;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
