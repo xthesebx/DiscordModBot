@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -138,7 +139,8 @@ public class Main extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         super.onMessageReactionRemove(event);
-        if (event.getUser().isBot()) return;
-        map.get(event.getGuild().getId()).onMessageReactionRemove(event);
+        User user = event.getJDA().retrieveUserById(event.getUserId()).complete();
+        if (user.isBot()) return;
+        map.get(event.getGuild().getId()).onMessageReactionRemove(event, user);
     }
 }
