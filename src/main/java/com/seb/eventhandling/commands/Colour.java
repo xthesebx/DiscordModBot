@@ -26,8 +26,7 @@ public class Colour extends BasicCommand {
         Random rn = new Random();
         try {
             while (running) Thread.sleep(rn.nextInt(20));
-        } catch (InterruptedException e) {
-
+        } catch (InterruptedException ignored) {
         }
         running = true;
         Guild guild = event.getGuild();
@@ -37,45 +36,43 @@ public class Colour extends BasicCommand {
         }
         Pattern pattern = Pattern.compile("[0-9a-fA-F]{6}");
         Matcher matcher = pattern.matcher(s);
-        Role role = null;
-        try {
-            Role removerole = null;
-            boolean deleterole = false;
-            if (matcher.matches()) {
-                for (Role tempRole : event.getMember().getRoles()) {
-                    if (pattern.matcher(tempRole.getName()).matches()) {
-                        removerole = tempRole;
-
-                    }
+        Role role;
+        Role removerole = null;
+        boolean deleterole = false;
+        if (matcher.matches()) {
+            for (Role tempRole : event.getMember().getRoles()) {
+                if (pattern.matcher(tempRole.getName()).matches()) {
+                    removerole = tempRole;
                 }
-                role = guild.createRole().setName(s).setColor(Integer.parseInt(s, 16)).complete();
-
-                if (removerole != null) {
-                    List<Role> rolegivelist = new ArrayList<>();
-                    rolegivelist.add(role);
-                    List<Role> rolegtakelist = new ArrayList<>();
-                    rolegtakelist.add(removerole);
-                    guild.modifyMemberRoles(event.getMember(), rolegivelist, rolegtakelist).complete();
-                } else guild.addRoleToMember(event.getMember(), role).complete();
-                if (!event.getMember().getRoles().isEmpty()) {
-                    guild.modifyRolePositions(true).selectPosition(role.getPosition()).moveAbove(guild.retrieveMember(event.getUser()).complete().getRoles().get(0)).complete();
-                }
-                if (guild.getMembersWithRoles(role).isEmpty()) deleterole = true;
-                if (removerole != null && deleterole) removerole.delete().queue();
-                event.getHook().editOriginal("gave you the role").queue();
-            } else {
-                event.getHook().editOriginal("please use a valid hex rgb colour code").queue();
             }
-        } catch (IllegalStateException e) {
-            /***
-             * Fuck Discord, somehow it just doesn't work 1/8 times or something for no reason so bandaid:
-             * Repeat command in few seconds.
-             * Just waiting in thread doesn't work cause it keeps the caches and they are not deletable.
-             * TODO: test, maybe unneeded and fixed, not sure tho
-             */
-            Logger.error(e);
-            role.delete().complete();
-            event.getHook().editOriginal("just try again in a few secs, discord is an asshole i think").queue();
+            role = guild.createRole().setName(s).setColor(Integer.parseInt(s, 16)).complete();
+            if (removerole != null) {
+                List<Role> rolegivelist = new ArrayList<>();
+                rolegivelist.add(role);
+                List<Role> rolegtakelist = new ArrayList<>();
+                rolegtakelist.add(removerole);
+                guild.modifyMemberRoles(event.getMember(), rolegivelist, rolegtakelist).complete();
+            } else guild.addRoleToMember(event.getMember(), role).complete();
+            if (!event.getMember().getRoles().isEmpty()) {
+                /**
+                 * Fuck Discord, somehow it just doesn't work 1/8 times or something for no reason so bandaid:
+                 * Repeat command in few seconds.
+                 * Just waiting in thread doesn't work cause it keeps the caches and they are not deletable.
+                 * TODO: test, maybe unneeded catch block and fixed, not sure tho
+                 */
+                try {
+                    guild.modifyRolePositions(true).selectPosition(role.getPosition()).moveAbove(guild.retrieveMember(event.getUser()).complete().getRoles().get(0)).complete();
+                } catch (IllegalStateException e) {
+                    Logger.error(e);
+                    role.delete().complete();
+                    event.getHook().editOriginal("just try again in a few secs, discord is an asshole i think").queue();
+                }
+            }
+            if (guild.getMembersWithRoles(role).isEmpty()) deleterole = true;
+            if (removerole != null && deleterole) removerole.delete().queue();
+            event.getHook().editOriginal("gave you the role").queue();
+        } else {
+            event.getHook().editOriginal("please use a valid hex rgb colour code").queue();
         }
         running = false;
     }
