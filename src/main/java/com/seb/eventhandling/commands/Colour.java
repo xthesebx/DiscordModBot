@@ -1,5 +1,6 @@
 package com.seb.eventhandling.commands;
 
+import com.hawolt.logger.Logger;
 import com.seb.Server;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
@@ -57,8 +58,7 @@ public class Colour extends BasicCommand {
                     guild.modifyMemberRoles(event.getMember(), rolegivelist, rolegtakelist).complete();
                 } else guild.addRoleToMember(event.getMember(), role).complete();
                 if (!event.getMember().getRoles().isEmpty()) {
-                    guild.pruneMemberCache();
-                    guild.modifyRolePositions(true).selectPosition(role.getPosition()).moveAbove(event.getMember().getRoles().get(0)).complete();
+                    guild.modifyRolePositions(true).selectPosition(role.getPosition()).moveAbove(guild.retrieveMember(event.getUser()).complete().getRoles().get(0)).complete();
                 }
                 if (guild.getMembersWithRoles(role).isEmpty()) deleterole = true;
                 if (removerole != null && deleterole) removerole.delete().queue();
@@ -71,7 +71,9 @@ public class Colour extends BasicCommand {
              * Fuck Discord, somehow it just doesn't work 1/8 times or something for no reason so bandaid:
              * Repeat command in few seconds.
              * Just waiting in thread doesn't work cause it keeps the caches and they are not deletable.
+             * TODO: test, maybe unneeded and fixed, not sure tho
              */
+            Logger.error(e);
             role.delete().complete();
             event.getHook().editOriginal("just try again in a few secs, discord is an asshole i think").queue();
         }
